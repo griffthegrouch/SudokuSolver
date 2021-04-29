@@ -1,42 +1,24 @@
 import tkinter as tk
 
-def solve_board():
-    # solves sudoku board
-    global board
+count = 0
+# defining unsolved board
+unsolved_board = [
+    [5, 3, 0,   0, 7, 0,    0, 0, 0],
+    [6, 0, 0,   1, 9, 5,    0, 0, 0],
+    [0, 9, 8,   0, 0, 0,    0, 6, 0],
 
-    for y in range(9):
-        for x in range(9):
-            if board[y][x] == 0:
-                for n in range(1, 10):
-                    if is_possible(y, x, n):
-                        board[y][x] = n
+    [8, 0, 0,   0, 6, 0,    0, 0, 3],
+    [4, 0, 0,   8, 0, 3,    0, 0, 1],
+    [7, 0, 0,   0, 2, 0,    0, 0, 6],
 
-                        # solve_board()
-                        board[y][x] = 0
+    [0, 6, 0,   0, 0, 0,    2, 8, 0],
+    [0, 0, 0,   4, 1, 9,    0, 0, 0],
+    [0, 0, 0,   0, 8, 0,    0, 7, 9]
+]
 
-                return
+# saving working copy of board to solve on
+board = unsolved_board
 
-    print("done")
-
-
-def is_possible(y, x, n):
-    global board
-    for i in range(0, 9):
-        print("[" + str(y) + "][" + str(i) + "] = " + str(n))
-        if board[y][i] == n:
-            return False
-    for i in range(0, 9):
-
-        if board[x][i] == n:
-            return False
-
-    x0 = (x // 3) * 3
-    y0 = (y // 3) * 3
-    for i in range(0, 3):
-        for j in range(0, 3):
-            if board[y0 + i][x0 + j] == n:
-                return False
-    return True
 
 class SudokuDisplay(tk.Frame):
     def __init__(self, master=None):
@@ -56,7 +38,9 @@ class SudokuDisplay(tk.Frame):
         self.quit_btn.pack(side="top")
 
     def solve(self):
-        print("hi there, everyone!")
+        print("starting to solve board...")
+        solve_board()
+        self.fill_board()
 
     def draw_board(self):
         # function draws the sudoku grid
@@ -66,25 +50,25 @@ class SudokuDisplay(tk.Frame):
         colour2 = "#c5faf0"
 
         canvas.create_rectangle(50, 50, 200, 200,
-                              outline="#fb0", fill=colour1)
+                                outline="#fb0", fill=colour1)
         canvas.create_rectangle(200, 50, 350, 200,
-                              outline="#fb0", fill=colour2)
+                                outline="#fb0", fill=colour2)
         canvas.create_rectangle(350, 50, 500, 200,
-                              outline="#fb0", fill=colour1)
+                                outline="#fb0", fill=colour1)
 
         canvas.create_rectangle(50, 200, 200, 350,
-                              outline="#fb0", fill=colour2)
+                                outline="#fb0", fill=colour2)
         canvas.create_rectangle(200, 200, 350, 350,
-                              outline="#fb0", fill=colour1)
+                                outline="#fb0", fill=colour1)
         canvas.create_rectangle(350, 200, 500, 350,
-                              outline="#fb0", fill=colour2)
+                                outline="#fb0", fill=colour2)
 
         canvas.create_rectangle(50, 350, 200, 500,
-                              outline="#fb0", fill=colour1)
+                                outline="#fb0", fill=colour1)
         canvas.create_rectangle(200, 350, 350, 500,
-                              outline="#fb0", fill=colour2)
+                                outline="#fb0", fill=colour2)
         canvas.create_rectangle(350, 350, 500, 500,
-                              outline="#fb0", fill=colour1)
+                                outline="#fb0", fill=colour1)
 
         # draws vertical lines
         canvas.create_line(0, 50, 0, 500)
@@ -142,6 +126,44 @@ class SudokuDisplay(tk.Frame):
         canvas.pack(fill=tk.BOTH, expand=1)
 
 
+def solve_board():
+    # solves sudoku board
+    global board
+    global count
+
+    count += 1
+    print(count)
+    print("working on it!!")
+    for y in range(9):
+        for x in range(9):
+            if board[y][x] == 0:
+                for n in range(1, 10):
+                    if is_possible(y, x, n):
+                        board[y][x] = n
+                        solve_board()
+
+                        board[y][x] = 0
+                return
+    print("phew .. done.")
+
+def is_possible(y, x, n):
+
+    global board
+
+    # checks vertically and horizontally if the number exists
+    for i in range(9):
+        if board[y][i] == n or board[x][i] == n:
+            return False
+
+    # checks all blocks inside of square if number exists
+    x0 = (x // 3) * 3
+    y0 = (y // 3) * 3
+    for i in range(0, 3):
+        for j in range(0, 3):
+            if board[y0 + i][x0 + j] == n:
+                return False
+    return True
+
 if __name__ == '__main__':
     # main flow
     # 1 define one sudoku problem
@@ -151,23 +173,6 @@ if __name__ == '__main__':
     # 5 solve working copy of board
     # 6 display solved board
 
-    # defining unsolved board
-    unsolved_board = [
-        ['5', '3', 0, 0, '7', 0, 0, 0, 0],
-        ['6', 0, 0, '1', '9', '5', 0, 0, 0],
-        [0, '9', '8', 0, 0, 0, 0, '6', 0],
-
-        ['8', 0, 0, 0, '6', 0, 0, 0, '3'],
-        ['4', 0, 0, '8', 0, '3', 0, 0, '1'],
-        ['7', 0, 0, 0, '2', 0, 0, 0, '6'],
-
-        [0, '6', 0, 0, 0, 0, '2', '8', 0],
-        [0, 0, 0, '4', '1', '9', 0, 0, 0],
-        [0, 0, 0, 0, '8', 0, 0, '7', '9']
-    ]
-
-    # saving working copy of board to solve on
-    board = unsolved_board
 
     # creating display instance
     root = tk.Tk()
