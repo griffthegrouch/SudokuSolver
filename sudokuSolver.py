@@ -1,5 +1,6 @@
 import time
 import tkinter as tk
+import screenReader
 
 count = 0
 
@@ -20,6 +21,7 @@ unsolved_board = [
 
 # saving working copy of board to solve on
 grid = unsolved_board
+solved_board = grid
 
 
 class SudokuDisplay(tk.Frame):
@@ -39,7 +41,10 @@ class SudokuDisplay(tk.Frame):
         self.quit_btn = tk.Button(self, text="QUIT", fg="red", command=self.master.destroy)
         self.quit_btn.pack(side="top")
 
-    def draw_board(self):
+        self.get_board = tk.Button(self, text="Get Board", fg="blue", command=get_board)
+        self.get_board.pack(side="top")
+
+def draw_board():
         # function draws the sudoku grid
 
         # draws vertical lines
@@ -72,27 +77,35 @@ class SudokuDisplay(tk.Frame):
         canvas.pack(fill=tk.BOTH, expand=1)
 
 
-def fill_board():
+def get_board():
+    # uses screen capture to get a sudoku board
+    new_board = screenReader.getBoard()
+    fill_board(new_board)
+
+
+def fill_board(board):
     # put all board values into a long array, as they're stored as a 2d array
+    canvas.delete("all")
+    draw_board()
 
     values = []
-    for element1 in grid:
+    for element1 in board:
         for element2 in element1:
             values.append(element2)
 
     # offset labels because of the size of each text
-    lblx = 13
-    lbly = 5
+    lblx = 25
+    lbly = 25
     for i in range(81):
         if i % 9 == 0:
-            lblx = 13
+            lblx = 25
             lbly += 50
         lblx += 50
         text = values[i]
         if values[i] == 0:
             text = None
         label1 = tk.Label(canvas, text=text, fg="black", font=("Helvetica", 25))
-        label1.place(x=lblx, y=lbly)
+        canvas.create_window(lblx, lbly, window=label1)
 
     canvas.pack(fill=tk.BOTH, expand=1)
 
@@ -101,7 +114,7 @@ def solve():
     # solves sudoku board
     global grid
     global count
-
+    global solved_board
     for y in range(9):
         for x in range(9):
             if grid[y][x] == 0:
@@ -112,7 +125,8 @@ def solve():
                         grid[y][x] = 0
                 count += 1
                 return
-    fill_board()
+    solved_board = grid
+    fill_board(solved_board)
     print(str(count) + "  phew, done.   ")
 
 
@@ -131,6 +145,7 @@ def is_possible(y, x, n):
                 return False
     return True
 
+
 if __name__ == '__main__':
     # creating display instance
     root = tk.Tk()
@@ -138,9 +153,9 @@ if __name__ == '__main__':
     canvas = tk.Canvas(app)
 
     # displaying board
-    app.draw_board()
+    draw_board()
 
     # filling board with unsolved problem
-    fill_board()
+    fill_board(grid)
 
     app.mainloop()

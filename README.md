@@ -1,4 +1,9 @@
  this project is intended to be a sudoku solver
+    
+    the website used to generate sudoku puzzles
+    in fullscreen mode, on second monitor -
+    https://www.sudokuweb.org/
+
 
     # main flow
     # 1 define one sudoku problem
