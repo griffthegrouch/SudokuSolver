@@ -2,26 +2,6 @@ import time
 import tkinter as tk
 import screenReader
 
-count = 0
-
-# defining unsolved board
-unsolved_board = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 0],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9]
-]
-
-# saving working copy of board to solve on
-grid = unsolved_board
-solved_board = unsolved_board
 
 class SudokuDisplay(tk.Frame):
     def __init__(self, master=None):
@@ -113,16 +93,16 @@ def fill_board(board):
 
 def solve_board():
     # solves current grid sudoku board and returns product
-    solve()
-    #print("finished")
 
+    #print("finished")
+    sb = solve()
+    #fill_board(sb)
 
 
 def solve():
     # solves sudoku board
     global grid
     global count
-    global solved_board
     for y in range(9):
         for x in range(9):
             if grid[y][x] == 0:
@@ -133,9 +113,8 @@ def solve():
                         grid[y][x] = 0
                 count += 1
                 return
-    solved_board = grid
-    fill_board(solved_board)
-    return
+    fill_board(grid)
+    return grid
 
 
 def is_possible(y, x, n):
@@ -155,6 +134,28 @@ def is_possible(y, x, n):
 
 
 if __name__ == '__main__':
+    count = 0
+
+    # defining unsolved board
+    unsolved_board = [
+        [5, 3, 0, 0, 7, 0, 0, 0, 0],
+        [6, 0, 0, 1, 9, 5, 0, 0, 0],
+        [0, 9, 8, 0, 0, 0, 0, 6, 0],
+
+        [8, 0, 0, 0, 6, 0, 0, 0, 3],
+        [4, 0, 0, 8, 0, 3, 0, 0, 1],
+        [7, 0, 0, 0, 2, 0, 0, 0, 6],
+
+        [0, 6, 0, 0, 0, 0, 2, 8, 0],
+        [0, 0, 0, 4, 1, 9, 0, 0, 0],
+        [0, 0, 0, 0, 8, 0, 0, 7, 9]
+    ]
+
+    # saving working copy of board to solve on
+    grid = unsolved_board
+    solved_board = unsolved_board
+
+
     # creating display instance
     root = tk.Tk()
     app = SudokuDisplay(master=root)

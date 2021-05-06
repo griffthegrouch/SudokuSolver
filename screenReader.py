@@ -56,7 +56,11 @@ def getBoard():
     B = 0
 
     # processing each of the 81 squares
+    print("processing image..")
     for x in range(81):
+        if x%10 == 0 or x == 80:
+            print (str(int((x+1)/81*100)) + "%")
+
         # setting the individual square's positions, according to the number of square
         if x % 9 == 0:
             # if currently processing a far left square, specifically set left and top values
@@ -94,7 +98,7 @@ def getBoard():
         row = (x // 9)
         col = x % 9
         grid[row][col] = num
-
+    print("done")
     return grid
 
 

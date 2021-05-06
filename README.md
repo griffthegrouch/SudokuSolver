@@ -1,4 +1,4 @@
- this project is intended to be a sudoku solver
+ this project solves sudoku puzzles
     
     the website used to generate sudoku puzzles
     in fullscreen mode, on second monitor -
