@@ -90,7 +90,7 @@ def getBoard():
                         found4 = True
             if found4 == False:
                 num = 1
-            print(num)
+            #print(num)
         row = (x // 9)
         col = x % 9
         grid[row][col] = num
