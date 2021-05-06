@@ -44,11 +44,11 @@ def getBoard():
     # grabbing image screenshot from coordinates, cropped image to just grab sudoku board
     box = [left, top, right, bottom]
     printscreen_pil = ImageGrab.grab( bbox=box, include_layered_windows=False, all_screens=True)
-    printscreen_pil.show()
+    #printscreen_pil.show()
 
     # storing image as image format
     img = Image.Image.convert(printscreen_pil, 'L')
-    img.show()
+    #img.show()
     box_size = img.height / 9
     L = 0
     T = - box_size

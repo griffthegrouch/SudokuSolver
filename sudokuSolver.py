@@ -21,8 +21,7 @@ unsolved_board = [
 
 # saving working copy of board to solve on
 grid = unsolved_board
-solved_board = grid
-
+solved_board = unsolved_board
 
 class SudokuDisplay(tk.Frame):
     def __init__(self, master=None):
@@ -35,46 +34,47 @@ class SudokuDisplay(tk.Frame):
 
     def create_widgets(self):
         # creates solve and quit buttons
-        self.solve_btn = tk.Button(self, text="Solve\n(click me)", fg="green", command=solve)
+        self.solve_btn = tk.Button(self, text="Solve\n(click me)", fg="green", command=solve_board)
         self.solve_btn.pack(side="top")
+
+        self.get_board_btn = tk.Button(self, text="Get Board", fg="blue", command=get_board)
+        self.get_board_btn.pack(side="top")
 
         self.quit_btn = tk.Button(self, text="QUIT", fg="red", command=self.master.destroy)
         self.quit_btn.pack(side="top")
 
-        self.get_board = tk.Button(self, text="Get Board", fg="blue", command=get_board)
-        self.get_board.pack(side="top")
 
 def draw_board():
-        # function draws the sudoku grid
+    # function draws the sudoku grid
 
-        # draws vertical lines
-        canvas.create_line(0, 50, 0, 500)
+    # draws vertical lines
+    canvas.create_line(0, 50, 0, 500)
 
-        canvas.create_line(50, 50, 50, 500)
-        canvas.create_line(100, 50, 100, 500)
-        canvas.create_line(150, 50, 150, 500)
-        canvas.create_line(200, 50, 200, 500)
-        canvas.create_line(250, 50, 250, 500)
-        canvas.create_line(300, 50, 300, 500)
-        canvas.create_line(350, 50, 350, 500)
-        canvas.create_line(400, 50, 400, 500)
-        canvas.create_line(450, 50, 450, 500)
-        canvas.create_line(500, 50, 500, 500)
+    canvas.create_line(50, 50, 50, 500)
+    canvas.create_line(100, 50, 100, 500)
+    canvas.create_line(150, 50, 150, 500)
+    canvas.create_line(200, 50, 200, 500)
+    canvas.create_line(250, 50, 250, 500)
+    canvas.create_line(300, 50, 300, 500)
+    canvas.create_line(350, 50, 350, 500)
+    canvas.create_line(400, 50, 400, 500)
+    canvas.create_line(450, 50, 450, 500)
+    canvas.create_line(500, 50, 500, 500)
 
-        # draws horizontal lines
-        canvas.create_line(50, 0, 500, 0)
-        canvas.create_line(50, 50, 500, 50)
-        canvas.create_line(50, 100, 500, 100)
-        canvas.create_line(50, 150, 500, 150)
-        canvas.create_line(50, 200, 500, 200)
-        canvas.create_line(50, 250, 500, 250)
-        canvas.create_line(50, 300, 500, 300)
-        canvas.create_line(50, 350, 500, 350)
-        canvas.create_line(50, 400, 500, 400)
-        canvas.create_line(50, 450, 500, 450)
-        canvas.create_line(50, 500, 500, 500)
+    # draws horizontal lines
+    canvas.create_line(50, 0, 500, 0)
+    canvas.create_line(50, 50, 500, 50)
+    canvas.create_line(50, 100, 500, 100)
+    canvas.create_line(50, 150, 500, 150)
+    canvas.create_line(50, 200, 500, 200)
+    canvas.create_line(50, 250, 500, 250)
+    canvas.create_line(50, 300, 500, 300)
+    canvas.create_line(50, 350, 500, 350)
+    canvas.create_line(50, 400, 500, 400)
+    canvas.create_line(50, 450, 500, 450)
+    canvas.create_line(50, 500, 500, 500)
 
-        canvas.pack(fill=tk.BOTH, expand=1)
+    canvas.pack(fill=tk.BOTH, expand=1)
 
 
 def get_board():
@@ -110,14 +110,19 @@ def fill_board(board):
 
     canvas.pack(fill=tk.BOTH, expand=1)
 
-def solve():
-    # solves current grid sudoku board and returns product
-    fill_board(solve_grid())
 
-def solve_grid():
+def solve_board():
+    # solves current grid sudoku board and returns product
+    solve()
+    print("finished")
+
+
+
+def solve():
     # solves sudoku board
     global grid
     global count
+    global solved_board
     for y in range(9):
         for x in range(9):
             if grid[y][x] == 0:
@@ -129,8 +134,8 @@ def solve_grid():
                 count += 1
                 return
     solved_board = grid
-    grid = unsolved_board
-    return solved_board
+    fill_board(solved_board)
+    return
 
 
 def is_possible(y, x, n):
