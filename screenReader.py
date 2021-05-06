@@ -54,6 +54,7 @@ def getBoard():
     # setting starting image crop positions
     top0 = top - box_width
     left0 = left
+    
 
     # processing each of the 81 squares
     for x in range(81):
