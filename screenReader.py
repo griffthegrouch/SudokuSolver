@@ -6,13 +6,13 @@ from PIL import Image
 import pytesseract
 import cv2
 
-left = 391
-top = 262
-right = 671
-bottom = 542
+left = 390
+top = 265
+right = 670
+bottom = 545
 
 screen_width = 1920
-screen_height = 105
+screen_height = 102
 
 left += screen_width
 right += screen_width
@@ -29,72 +29,73 @@ def getBoard():
     # function takes a screencapture of sudoku board, then processes each 81 squares and pulls the number from it if
     # exists, adding it to an array to use as a sudoku grid
     grid =  [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
 
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
 
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 0],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
-    # grabbing image screenshot from coordinates
-    printscreen_pil = ImageGrab.grab(bbox=None, include_layered_windows=False, all_screens=True)
-    # cropping image to just grab sudoku board
-    printscreen_crop = printscreen_pil.crop((left, top, right, bottom))
-    # converting image to array
-    # printscreen_numpy = np.array(printscreen_crop.getdata(), dtype='uint8') \
-    #     .reshape((printscreen_crop.size[1], printscreen_crop.size[0], 3))
-    # img = Image.fromarray(printscreen_numpy)
-    img = printscreen_crop.convert('L')
+    # grabbing image screenshot from coordinates, cropped image to just grab sudoku board
+    box = [left, top, right, bottom]
+    printscreen_pil = ImageGrab.grab( bbox=box, include_layered_windows=False, all_screens=True)
+    printscreen_pil.show()
+
+    # storing image as image format
+    img = Image.Image.convert(printscreen_pil, 'L')
     img.show()
-    # setting starting image crop positions
-    top0 = top - box_width
-    left0 = left
-    
+    box_size = img.height / 9
+    L = 0
+    T = - box_size
+    R = 0
+    B = 0
 
     # processing each of the 81 squares
     for x in range(81):
-
-        # setting the individual square's position
+        # setting the individual square's positions, according to the number of square
         if x % 9 == 0:
-            # if currently processing a far left square, specifically set left and top valuess
-            top0 += box_offset
-            left0 = left
+            # if currently processing a far left square, specifically set left and top values
+            T += box_size
+            B = T + box_size
+            L = 0
         else:
-            left0 += box_offset
-        right0 = left0 + box_width
-        bottom0 = top0 + box_width
+            L += box_size
+        R = L + box_size
 
         # cropping the image to the size/position of the current square
-        img = img.crop((left0+5, top0+3, right0-5, bottom0-5))
-
-        # cv2.imshow('window', printscreen_numpy)
-        #printscreen_numpy = cv2.cvtColor(printscreen_numpy, cv2.COLOR_BGR2GRAY)
+        box = [left, top, right, bottom]
+        imgCrop = img.crop((L+5, T+5, R-2, B-2))
 
         # converting screenshot to image and pulling text from it
-
-        # if x > 40:
-        img.show()
-        img_text = pytesseract.image_to_string(img)
+        img_text = pytesseract.image_to_string(imgCrop, lang='eng', config='--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789')
         num = 0
         for char in img_text:
             if char.isdigit():
                 num = int(char)
-        # print(str(x) + "= " + str(num))
-
+        # if image thinks its a 4 -> cut top bit off of image and recheck, because '1's get mistaken for '4's
+        if num == 4:
+            #imgCrop.show()
+            imgCrop = imgCrop.crop((0, 4, imgCrop.width-5, imgCrop.height))
+            #imgCrop.show()
+            img_text = pytesseract.image_to_string(imgCrop, lang='eng', config='--psm 10 --oem 3 -c tessedit_char_whitelist=0123456789')
+            found4 = False
+            for char in img_text:
+                if char.isdigit():
+                    if int(char) == 4:
+                        found4 = True
+            if found4 == False:
+                num = 1
+            print(num)
         row = (x // 9)
         col = x % 9
         grid[row][col] = num
 
     return grid
-        # input()
-    # if cv2.waitKey(25) & 0xff == ord('q'):
-    #     cv2.destroyAllWindows()
-    #     break
 
 
 # Press the green button in the gutter to run the script.

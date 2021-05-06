@@ -79,8 +79,9 @@ def draw_board():
 
 def get_board():
     # uses screen capture to get a sudoku board
-    new_board = screenReader.getBoard()
-    fill_board(new_board)
+    global grid
+    grid = screenReader.getBoard()
+    fill_board(grid)
 
 
 def fill_board(board):
@@ -109,12 +110,14 @@ def fill_board(board):
 
     canvas.pack(fill=tk.BOTH, expand=1)
 
-
 def solve():
+    # solves current grid sudoku board and returns product
+    fill_board(solve_grid())
+
+def solve_grid():
     # solves sudoku board
     global grid
     global count
-    global solved_board
     for y in range(9):
         for x in range(9):
             if grid[y][x] == 0:
@@ -126,8 +129,8 @@ def solve():
                 count += 1
                 return
     solved_board = grid
-    fill_board(solved_board)
-    print(str(count) + "  phew, done.   ")
+    grid = unsolved_board
+    return solved_board
 
 
 def is_possible(y, x, n):
