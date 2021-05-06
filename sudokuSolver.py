@@ -114,7 +114,7 @@ def fill_board(board):
 def solve_board():
     # solves current grid sudoku board and returns product
     solve()
-    print("finished")
+    #print("finished")
 
 
 
